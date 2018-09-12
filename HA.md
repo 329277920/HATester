@@ -1,6 +1,10 @@
 # 高可用与负载均衡 #
 >[一、keepalived](1#)<br>
 >&nbsp;&nbsp;[1、概述](1.1#)<br>
+>&nbsp;&nbsp;[2、安装](1.2#)<br>
+>[二、nginx](2#)<br>
+>&nbsp;&nbsp;[2.1、概述](2.1#)<br>
+>&nbsp;&nbsp;[2.2、安装](2.1#)<br>
 >[附录](10#)<br>
 >&nbsp;&nbsp;[1、VRRP](10.1#)<br>
 
@@ -109,4 +113,43 @@ ip: 192.168.56.100（虚IP），192.168.56.110（节点1主），192.168.56.120�
 
 ![](https://i.imgur.com/kVlUHDl.png)
 
-至此，keepalived搭建成功，下面结合nginx，来实现主备nginx，以达到高可用的目的。
+至此，keepalived搭建成功。
+
+<h2 id="2">二、nginx</h2>
+参考:[http://www.nginx.cn/doc/](http://www.nginx.cn/doc/)
+
+<h3 id="2.1">1、概述</h3>
+Nginx是一个高性能的 Web 和反向代理服务器，官方数据最大支持50000个并发连接。
+
+<h3 id="2.2">2、安装</h3>
+参考: [http://www.nginx.cn/install](http://www.nginx.cn/install)<br>
+发布地址: [http://nginx.org/download/](http://nginx.org/download/)<br>
+版本: [v1.9.9](http://nginx.org/download/nginx-1.9.9.tar.gz)<br>
+环境: centos7<br>
+
+
+**步骤一**<br>
+在110、120节点上分别安装 nginx v1.9.9。
+    
+    yum install -y gcc automake autoconf libtool make # 编译环境
+   
+    yum install -y gcc gcc-c++
+
+    mkdir -p /apps/nginx # 创建源码保存目录
+    cd /apps/nginx/
+    wget http://nginx.org/download/nginx-1.9.9.tar.gz
+    tar -zxvf nginx-1.9.9.tar.gz 
+    cd nginx-1.9.9
+
+    ./configure --sbin-path=/usr/local/nginx/nginx \
+		--conf-path=/usr/local/nginx/nginx.conf \
+		--pid-path=/usr/local/nginx/nginx.pid 		 
+	 
+    make && make install # 编译并安装
+
+    /usr/local/nginx/nginx # 启动 
+
+验证：分别访问 110和120的80端口， http://ip:80，出现如下图:
+
+![](https://i.imgur.com/G9GZ0hV.png)
+
